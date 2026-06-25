@@ -16,7 +16,12 @@ function App() {
     const data = {
       username,
       message,
-    };
+       time: new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  }),
+};
+    
 
     socket.emit("send_message", data);
     setMessage("");
@@ -64,8 +69,12 @@ function App() {
       <div>
         {messages.map((msg, index) => (
           <p key={index}>
-            <strong>{msg.username}:</strong> {msg.message}
-          </p>
+             <strong>{msg.username}</strong>
+  {" "}
+  <small>({msg.time})</small>
+  <br />
+  {msg.message}
+</p>
         ))}
       </div>
 
