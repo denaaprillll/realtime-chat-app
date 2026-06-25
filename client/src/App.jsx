@@ -16,12 +16,11 @@ function App() {
     const data = {
       username,
       message,
-       time: new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  }),
-};
-    
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
 
     socket.emit("send_message", data);
     setMessage("");
@@ -47,6 +46,10 @@ function App() {
           placeholder="Masukkan nama..."
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          style={{
+            padding: "10px",
+            marginRight: "10px",
+          }}
         />
 
         <button
@@ -66,28 +69,69 @@ function App() {
     <div style={{ padding: "20px" }}>
       <h1>Realtime Chat App</h1>
 
-      <div>
+      <div
+        style={{
+          height: "400px",
+          overflowY: "auto",
+          border: "1px solid #ddd",
+          borderRadius: "10px",
+          padding: "15px",
+          marginBottom: "15px",
+        }}
+      >
         {messages.map((msg, index) => (
-          <p key={index}>
-             <strong>{msg.username}</strong>
-  {" "}
-  <small>({msg.time})</small>
-  <br />
-  {msg.message}
-</p>
+          <div
+            key={index}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "10px",
+              padding: "10px",
+              marginBottom: "10px",
+              maxWidth: "300px",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
+            <div>
+              <strong>{msg.username}</strong>
+
+              <small style={{ marginLeft: "8px" }}>
+                {msg.time}
+              </small>
+            </div>
+
+            <div style={{ marginTop: "5px" }}>
+              {msg.message}
+            </div>
+          </div>
         ))}
       </div>
 
-      <input
-        type="text"
-        placeholder="Ketik pesan..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Ketik pesan..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          style={{
+            flex: 1,
+            padding: "10px",
+          }}
+        />
 
-      <button onClick={sendMessage}>
-        Kirim
-      </button>
+        <button
+          onClick={sendMessage}
+          style={{
+            padding: "10px 20px",
+          }}
+        >
+          Kirim
+        </button>
+      </div>
     </div>
   );
 }
