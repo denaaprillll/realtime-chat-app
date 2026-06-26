@@ -41,7 +41,7 @@
 }
 
 .chat-header {
-  background-color: #e0a8c7;
+  background-color: #b04580f0;
   color: white;
   padding: 2px;
   border-radius: 18px;
@@ -63,7 +63,7 @@
 .chat-box {
   flex: 1;
   overflow-y: auto;
-  border: 1px solid #f13580;
+  border: 1px solid #e49cb9;
   border-radius: 25px;
   padding: 15px;
   background-color: #e3bad757;
@@ -77,11 +77,11 @@
 }
 
 .my-message {
-  background-color: #e7338454;
+  background-color: #d8abbfce;
 }
 
 .other-message {
-  background-color: #e3b9d3;
+  background-color: #e7dfb1a1;
 }
 
 .input-area {
@@ -96,4 +96,45 @@
 
 .send-button {
   padding: 10px 20px;
+}
+
+.profile-card {
+  background-color: #fffaf7;
+  border-radius: 15px;
+  padding: 5px;
+  margin: 5px 0;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-title {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #d9b3c7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 35px;
+  margin: 0 auto 15px;
+}
+
+.profile-subtitle {
+  color: gray;
+  margin: 0px 0;
+}
+
+.profile-name {
+  margin: 5px 0;
+}
+
+.profile-status {
+  color: green;
+  font-weight: bold;
 }

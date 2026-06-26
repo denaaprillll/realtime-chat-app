@@ -83,13 +83,39 @@ function App() {
   <div className="app">
   <div className="sidebar">
       <h2>💬 Real Time Chat</h2>
-  <input className="search-input"
-   type="text"
-        placeholder="Cari pengguna..." />
+
+  <input
+  className="search-input"
+  type="text"
+  placeholder="Cari pengguna..." 
+  />
+   <div className="profile-card">
+    <p className="profile-title">
+      My Profile ({username})
+    </p>
+
+    <div className="profile-avatar">
+      👤
+    </div>
+
+    <p className="profile-subtitle">
+      My Account
+    </p>
+
+    <h3 className="profile-name">
+      {username}
+    </h3>
+
+    <p className="profile-status">
+      🟢 Online
+    </p>
+  </div>
+
   {users.map((user, index) => (
   <div key={index} className="user-card">
      {user}
   </div>
+  
 ))}
     </div>
 
@@ -145,9 +171,14 @@ function App() {
           type="text"
           placeholder="Ketik pesan..."
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
           className="message-input"
-        />
+          onChange={(e) => setMessage(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  }} />
+
 
         <button
           onClick={sendMessage}
