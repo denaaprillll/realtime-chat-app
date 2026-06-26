@@ -9,6 +9,7 @@ function App() {
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState(0);
 
   const sendMessage = () => {
     if (message.trim() === "") return;
@@ -30,7 +31,9 @@ function App() {
     socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
-
+    socket.on("online_users", (count) => {
+    setOnlineUsers(count);
+});
     return () => {
       socket.off("receive_message");
     };
@@ -68,7 +71,36 @@ function App() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Realtime Chat App</h1>
+<div
+  style={{
+    backgroundColor: "#075E54",
+    color: "white",
+    padding: "15px 20px",
+    borderRadius: "10px",
+    marginBottom: "15px",
+  }}
+>
+  <h2 style={{ margin: 0 }}>💬 Hii let's talk</h2>
 
+  <div
+    style={{
+      marginTop: "8px",
+      fontSize: "14px",
+    }}
+  >
+    👤 {username}
+  </div>
+
+  <div
+    style={{
+      color: "#90EE90",
+      fontSize: "13px",
+      marginTop: "3px",
+    }}
+  >
+    🟢 Online
+  </div>
+</div>
       <div
         style={{
           height: "400px",

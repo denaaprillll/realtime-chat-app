@@ -15,9 +15,11 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
+let onlineUsers = 0;
 io.on("connection", (socket) => {
   console.log("User Connected:", socket.id);
+  onlineUsers++;
+  io.emit("online_users", onlineUsers);
 
   socket.on("send_message", (data) => {
     io.emit("receive_message", data);
@@ -25,6 +27,8 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User Disconnected:", socket.id);
+    onlineUsers--;
+    io.emit("online_users", onlineUsers);
   });
 });
 
