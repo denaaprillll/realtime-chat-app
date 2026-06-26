@@ -115,9 +115,12 @@ function App() {
     {/* Chat Room */}
     <div
       style={{
-        flex: 1,
+        flex: 100,
         display: "flex",
         flexDirection: "column",
+        wordBreak: "break-word",
+  overflowWrap: "break-word",
+  whiteSpace: "pre-wrap",
       }}
     >
       {/* Header */}
