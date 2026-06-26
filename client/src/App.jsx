@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-
+import "./App.css";
 const socket = io("http://localhost:3000");
 
 function App() {
@@ -9,6 +9,11 @@ function App() {
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([
+  "Budi",
+  "Sinta",
+  "Rina",
+]);
   const [onlineUsers, setOnlineUsers] = useState(0);
 
   const sendMessage = () => {
@@ -57,10 +62,15 @@ function App() {
 
         <button
           onClick={() => {
-            if (username.trim() !== "") {
-              setJoined(true);
-            }
-          }}
+             if (username.trim() !== "") {
+    setJoined(true);
+
+    setUsers((prev) => {
+      if (prev.includes(username)) return prev;
+      return [...prev, username];
+    });
+  }
+}}
         >
           Gabung Chat
         </button>
@@ -70,98 +80,35 @@ function App() {
 
   return (
 
-  <div
-    style={{
-      display: "flex",
-      minHeight: "93vh",
-      padding: "20px",
-      gap: "20px",
-      backgroundColor: "#ffffff",
-    }}
-  >
-    {/* Sidebar */}
-    <div
-      style={{
-        width: "280px",
-        backgroundColor: "#e0d5d5",
-        borderRadius: "10px",
-        padding: "15px",
-        boxShadow: "0 2px 8px rgba(216, 169, 169, 0.1)",
-      }}
-    >
+  <div className="app">
+  <div className="sidebar">
       <h2>💬 Real Time Chat</h2>
-      <input
-        type="text"
-        placeholder="Cari pengguna..."
-        style={{
-          width: "92%",
-          padding: "8px",
-          marginTop: "18px",
-          marginBottom: "25px",
-        }}
-      />
-
-      <div
-        style={{
-          padding: "10px",
-          borderRadius: "8px",
-          backgroundColor: "#f6f6f6",
-        }}
-      >
-         {username}
-      </div>
+  <input className="search-input"
+   type="text"
+        placeholder="Cari pengguna..." />
+  {users.map((user, index) => (
+  <div key={index} className="user-card">
+     {user}
+  </div>
+))}
     </div>
 
     {/* Chat Room */}
-    <div
-      style={{
-        flex: 100,
-        display: "flex",
-        flexDirection: "column",
-        wordBreak: "break-word",
-  overflowWrap: "break-word",
-  whiteSpace: "pre-wrap",
-      }}
-    >
+  <div className="chat-room">
       {/* Header */}
-      <div
-        style={{
-          backgroundColor: "#e0a8c7",
-          color: "white",
-          padding: "2px 2px",
-          borderRadius: "18px",
-          marginBottom: "1px",
-        }}
-      >
+    <div className="chat-header">
         <h2 style={{ margin: 0 }}>💬 Hii let's talk</h2>
-
         <div style={{ marginTop: "8px", fontSize: "14px",  }}>
           👤 {username}
         </div>
 
-        <div
-          style={{
-            color: "#680f56",
-            fontSize: "13px",
-            marginTop: "3px",
-          }}
-        >
+      <div className="online-status">
           Online
         </div>
       </div>
 
       {/* Chat Box */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          border: "1px solid #f13580",
-          borderRadius: "25px",
-          padding: "15px",
-          backgroundColor: "#e3bad757",
-          marginBottom: "15px",
-        }}
-      >
+      <div className="chat-box">
         {messages.map((msg, index) => {
           const isMe = msg.username === username;
 
@@ -174,14 +121,7 @@ function App() {
                 marginBottom: "10px",
               }}
             >
-              <div
-                style={{
-                  borderRadius: "10px",
-                  padding: "10px",
-                  maxWidth: "300px",
-                  backgroundColor: isMe ? "#e7338454" : "#e3b9d3",
-                }}
-              >
+      <div className={`message ${isMe ? "my-message" : "other-message"}`}>
                 <div>
                   <strong>{msg.username}</strong>
 
@@ -200,28 +140,18 @@ function App() {
       </div>
 
       {/* Input */}
-      <div
-        style={{
-          display: "flex",
-          gap: "10px",
-        }}
-      >
+<div className="input-area">
         <input
           type="text"
           placeholder="Ketik pesan..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          style={{
-            flex: 1,
-            padding: "10px",
-          }}
+          className="message-input"
         />
 
         <button
           onClick={sendMessage}
-          style={{
-            padding: "10px 20px",
-          }}
+          className="send-button"
         >
           Kirim
         </button>
