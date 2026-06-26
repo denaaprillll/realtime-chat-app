@@ -79,18 +79,27 @@ function App() {
           marginBottom: "15px",
         }}
       >
-        {messages.map((msg, index) => (
+        {messages.map((msg, index) => { 
+          const isMe = msg.username === username;
+
+  return (
           <div
             key={index}
             style={{
-              border: "1px solid #ccc",
-              borderRadius: "10px",
-              padding: "10px",
+              display:"flex",
+              justifyContent:isMe ? "flex-end" : "flex-start",
               marginBottom: "10px",
-              maxWidth: "300px",
-              backgroundColor: "#f5f5f5",
             }}
           >
+             <div
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+          padding: "10px",
+          maxWidth: "300px",
+          backgroundColor: isMe ? "#DCF8C6" : "#F1F0F0",
+        }}
+      >
             <div>
               <strong>{msg.username}</strong>
 
@@ -103,7 +112,9 @@ function App() {
               {msg.message}
             </div>
           </div>
-        ))}
+          </div> 
+  );
+})}
       </div>
 
       <div
