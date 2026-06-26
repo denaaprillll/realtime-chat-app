@@ -69,86 +69,134 @@ function App() {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Realtime Chat App</h1>
-<div
-  style={{
-    backgroundColor: "#075E54",
-    color: "white",
-    padding: "15px 20px",
-    borderRadius: "10px",
-    marginBottom: "15px",
-  }}
->
-  <h2 style={{ margin: 0 }}>💬 Hii let's talk</h2>
 
   <div
     style={{
-      marginTop: "8px",
-      fontSize: "14px",
+      display: "flex",
+      minHeight: "93vh",
+      padding: "20px",
+      gap: "20px",
+      backgroundColor: "#ffffff",
     }}
   >
-    👤 {username}
-  </div>
+    {/* Sidebar */}
+    <div
+      style={{
+        width: "280px",
+        backgroundColor: "#e0d5d5",
+        borderRadius: "10px",
+        padding: "15px",
+        boxShadow: "0 2px 8px rgba(216, 169, 169, 0.1)",
+      }}
+    >
+      <h2>💬 Real Time Chat</h2>
+      <input
+        type="text"
+        placeholder="Cari pengguna..."
+        style={{
+          width: "92%",
+          padding: "8px",
+          marginTop: "18px",
+          marginBottom: "25px",
+        }}
+      />
 
-  <div
-    style={{
-      color: "#90EE90",
-      fontSize: "13px",
-      marginTop: "3px",
-    }}
-  >
-    🟢 Online
-  </div>
-</div>
       <div
         style={{
-          height: "400px",
+          padding: "10px",
+          borderRadius: "8px",
+          backgroundColor: "#f6f6f6",
+        }}
+      >
+         {username}
+      </div>
+    </div>
+
+    {/* Chat Room */}
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          backgroundColor: "#e0a8c7",
+          color: "white",
+          padding: "2px 2px",
+          borderRadius: "18px",
+          marginBottom: "1px",
+        }}
+      >
+        <h2 style={{ margin: 0 }}>💬 Hii let's talk</h2>
+
+        <div style={{ marginTop: "8px", fontSize: "14px",  }}>
+          👤 {username}
+        </div>
+
+        <div
+          style={{
+            color: "#680f56",
+            fontSize: "13px",
+            marginTop: "3px",
+          }}
+        >
+          Online
+        </div>
+      </div>
+
+      {/* Chat Box */}
+      <div
+        style={{
+          flex: 1,
           overflowY: "auto",
-          border: "1px solid #ddd",
-          borderRadius: "10px",
+          border: "1px solid #f13580",
+          borderRadius: "25px",
           padding: "15px",
+          backgroundColor: "#e3bad757",
           marginBottom: "15px",
         }}
       >
-        {messages.map((msg, index) => { 
+        {messages.map((msg, index) => {
           const isMe = msg.username === username;
 
-  return (
-          <div
-            key={index}
-            style={{
-              display:"flex",
-              justifyContent:isMe ? "flex-end" : "flex-start",
-              marginBottom: "10px",
-            }}
-          >
-             <div
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "10px",
-          padding: "10px",
-          maxWidth: "300px",
-          backgroundColor: isMe ? "#DCF8C6" : "#F1F0F0",
-        }}
-      >
-            <div>
-              <strong>{msg.username}</strong>
+          return (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                justifyContent: isMe ? "flex-end" : "flex-start",
+                marginBottom: "10px",
+              }}
+            >
+              <div
+                style={{
+                  borderRadius: "10px",
+                  padding: "10px",
+                  maxWidth: "300px",
+                  backgroundColor: isMe ? "#e7338454" : "#e3b9d3",
+                }}
+              >
+                <div>
+                  <strong>{msg.username}</strong>
 
-              <small style={{ marginLeft: "8px" }}>
-                {msg.time}
-              </small>
-            </div>
+                  <small style={{ marginLeft: "8px" }}>
+                    {msg.time}
+                  </small>
+                </div>
 
-            <div style={{ marginTop: "5px" }}>
-              {msg.message}
+                <div style={{ marginTop: "5px" }}>
+                  {msg.message}
+                </div>
+              </div>
             </div>
-          </div>
-          </div> 
-  );
-})}
+          );
+        })}
       </div>
 
+      {/* Input */}
       <div
         style={{
           display: "flex",
@@ -176,7 +224,8 @@ function App() {
         </button>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;
