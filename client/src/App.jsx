@@ -126,17 +126,31 @@ socket.on("user_list", (list) => {
 
     return (
       <div key={index} className="user-card">
-        <div className="user-header"><span>{user}</span>
+         <div className="avatar">
+    {user.charAt(0).toUpperCase()}
+  </div>
 
-          <small>
-            {lastMessage ? lastMessage.time : ""}
-          </small>
-        </div>
+  <div className="user-info">
 
-        <div className="last-message">
-          {lastMessage ? lastMessage.message : "Belum ada pesan"}
-        </div>
-      </div>
+    <div className="user-header">
+
+      <span className="user-name">
+        {user}
+      </span>
+
+      <small className="user-time">
+        {lastMessage ? lastMessage.time : ""}
+      </small>
+
+    </div>
+
+    <div className="last-message">
+      {lastMessage ? lastMessage.message : "Belum ada pesan"}
+    </div>
+
+  </div>
+
+</div>
     );
   })}
     </div>
