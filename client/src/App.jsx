@@ -28,6 +28,17 @@ function App() {
     setMessage("");
   };
 
+  const getLastMessage = (user) => {
+    const userMessages = messages.filter(
+        (msg) => msg.username === user
+    );
+
+    if (userMessages.length === 0) {
+        return null;
+    }
+
+    return userMessages[userMessages.length - 1];
+};
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
@@ -108,12 +119,26 @@ socket.on("user_list", (list) => {
     </p>
   </div>
 
-  {users.map((user, index) => (
-  <div key={index} className="user-card">
-     {user}
-  </div>
-  
-))}
+{users
+  .filter((user) => user !== username)
+  .map((user, index) => {
+    const lastMessage = getLastMessage(user);
+
+    return (
+      <div key={index} className="user-card">
+        <div className="user-header"><span>{user}</span>
+
+          <small>
+            {lastMessage ? lastMessage.time : ""}
+          </small>
+        </div>
+
+        <div className="last-message">
+          {lastMessage ? lastMessage.message : "Belum ada pesan"}
+        </div>
+      </div>
+    );
+  })}
     </div>
 
     {/* Chat Room */}
