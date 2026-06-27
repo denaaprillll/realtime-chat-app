@@ -9,11 +9,7 @@ function App() {
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [users, setUsers] = useState([
-  "Budi",
-  "Sinta",
-  "Rina",
-]);
+  const [users, setUsers] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState(0);
 
   const sendMessage = () => {
@@ -39,6 +35,10 @@ function App() {
     socket.on("online_users", (count) => {
     setOnlineUsers(count);
 });
+socket.on("user_list", (list) => {
+        console.log("React menerima:", list);
+        setUsers(list);
+    });
     return () => {
       socket.off("receive_message");
     };
@@ -65,13 +65,10 @@ function App() {
              if (username.trim() !== "") {
     setJoined(true);
 
-    setUsers((prev) => {
-      if (prev.includes(username)) return prev;
-      return [...prev, username];
-    });
+    socket.emit("join_user", username);
+    
   }
-}}
-        >
+}} >
           Gabung Chat
         </button>
       </div>
