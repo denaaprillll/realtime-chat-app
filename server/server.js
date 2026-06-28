@@ -17,52 +17,93 @@ const io = new Server(server, {
   },
 });
 
-// Menyimpan daftar username yang sedang online
+// Menyimpan daftar user yang sedang online
 let users = [];
 
 // Menyimpan jumlah user online
 let onlineUsers = 0;
 
 io.on("connection", (socket) => {
+
   console.log("User Connected:", socket.id);
 
-  // User bergabung ke chat
+  // ==========================
+  // USER LOGIN
+  // ==========================
   socket.on("join_user", (username) => {
-    // Simpan username pada socket
+
     socket.username = username;
 
-    // Hindari username ganda
-    if (!users.includes(username)) {
-      users.push(username);
+    const existingUser = users.find(
+      (user) => user.username === username
+    );
+
+    if (!existingUser) {
+
+      users.push({
+        username: username,
+        socketId: socket.id,
+        online: true,
+      });
+
+    } else {
+
+      existingUser.socketId = socket.id;
+      existingUser.online = true;
+
     }
-    console.log("Daftar user:", users);
-    // Kirim daftar user ke semua client
+
+    console.log("Daftar User:", users);
+
     io.emit("user_list", users);
+
   });
 
-  // Hitung user online
+  // JUMLAH USER ONLINE
+
   onlineUsers++;
   io.emit("online_users", onlineUsers);
 
-  // Kirim pesan
-  socket.on("send_message", (data) => {
-    io.emit("receive_message", data);
-  });
+  // CHAT GLOBAL
 
-  // Saat user keluar
+  socket.on("send_message", (data) => {
+      const receiver = users.find(
+    (user) => user.username === data.receiver
+  );
+
+  // kirim ke penerima
+  if (receiver) {
+    io.to(receiver.socketId).emit(
+      "receive_message",
+      data
+    );
+  }
+
+  // kirim juga ke pengirim
+  socket.emit(
+    "receive_message",
+    data
+  );
+
+});
+
+  // USER KELUAR
+ 
   socket.on("disconnect", () => {
     console.log("User Disconnected:", socket.id);
 
-    // Hapus username dari daftar user
-    users = users.filter((user) => user !== socket.username);
+    users = users.filter(
+      (user) => user.socketId !== socket.id
+    );
 
-    // Update daftar user ke semua client
+    
     io.emit("user_list", users);
 
-    // Kurangi jumlah user online
+
     onlineUsers--;
-    io.emit("online_users", onlineUsers);
-  });
+    if (onlineUsers < 0) {onlineUsers = 0;}
+    io.emit("online_users", onlineUsers); });
+
 });
 
 server.listen(3000, () => {

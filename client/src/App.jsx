@@ -11,34 +11,41 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState(0);
-
+  const [selectedUser, setSelectedUser] = useState(null);
   const sendMessage = () => {
-    if (message.trim() === "") return;
+  if (message.trim() === "") return;
 
-    const data = {
-      username,
-      message,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+  // Jangan boleh kirim kalau belum memilih lawan chat
+  if (!selectedUser) {
+    alert("Pilih pengguna terlebih dahulu.");
+    return;
+  }
 
-    socket.emit("send_message", data);
-    setMessage("");
+  const data = {
+    sender: username,
+    receiver: selectedUser.username,
+    message,
+    time: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
   };
 
-  const getLastMessage = (user) => {
-    const userMessages = messages.filter(
-        (msg) => msg.username === user
-    );
-
-    if (userMessages.length === 0) {
-        return null;
-    }
-
-    return userMessages[userMessages.length - 1];
+  socket.emit("send_message", data);
+  setMessage("");
 };
+const getLastMessage = (user) => {
+  const userMessages = messages.filter(
+    (msg) =>
+      msg.sender === user ||
+      msg.receiver === user
+  );
+
+  if (userMessages.length === 0) return null;
+
+  return userMessages[userMessages.length - 1];
+};
+
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
@@ -47,7 +54,7 @@ function App() {
     setOnlineUsers(count);
 });
 socket.on("user_list", (list) => {
-        console.log("React menerima:", list);
+  
         setUsers(list);
     });
     return () => {
@@ -103,7 +110,9 @@ socket.on("user_list", (list) => {
     </p>
 
     <div className="profile-avatar">
-      👤
+      {username.charAt(0).toUpperCase()}
+
+  <span className="online-dot"></span>
     </div>
 
     <p className="profile-subtitle">
@@ -114,43 +123,53 @@ socket.on("user_list", (list) => {
       {username}
     </h3>
 
-    <p className="profile-status">
-      🟢 Online
-    </p>
+  
   </div>
 
-{users
-  .filter((user) => user !== username)
+  {users
+  .filter((user) => user.username !== username)
   .map((user, index) => {
-    const lastMessage = getLastMessage(user);
+    const lastMessage = getLastMessage(user.username);
 
     return (
-      <div key={index} className="user-card">
-         <div className="avatar">
-    {user.charAt(0).toUpperCase()}
-  </div>
+      <div key={index} className={`user-card ${
+        selectedUser?.username === user.username
+            ? "active-user"
+            : ""
+    }`}
+    onClick={() => setSelectedUser(user)}>
 
-  <div className="user-info">
+        <div className="avatar">
+          {user.username.charAt(0).toUpperCase()}
 
-    <div className="user-header">
+          {user.online && (
+            <span className="online-dot"></span>
+          )}
+        </div>
 
-      <span className="user-name">
-        {user}
-      </span>
+        <div className="user-info">
 
-      <small className="user-time">
-        {lastMessage ? lastMessage.time : ""}
-      </small>
+          <div className="user-header">
 
-    </div>
+            <span className="user-name">
+              {user.username}
+            </span>
 
-    <div className="last-message">
-      {lastMessage ? lastMessage.message : "Belum ada pesan"}
-    </div>
+            <small className="user-time">
+              {lastMessage ? lastMessage.time : ""}
+            </small>
 
-  </div>
+          </div>
 
-</div>
+          <div className="last-message">
+            {lastMessage
+              ? lastMessage.message
+              : "Belum ada pesan"}
+          </div>
+
+        </div>
+
+      </div>
     );
   })}
     </div>
@@ -159,20 +178,39 @@ socket.on("user_list", (list) => {
   <div className="chat-room">
       {/* Header */}
     <div className="chat-header">
-        <h2 style={{ margin: 0 }}>💬 Hii let's talk</h2>
+        <h2> 💬 Hii let's talk</h2>
         <div style={{ marginTop: "8px", fontSize: "14px",  }}>
-          👤 {username}
+          {selectedUser
+    ? ` ${selectedUser.username}`
+    : ` ${username}`}
         </div>
 
       <div className="online-status">
-          Online
+          {selectedUser
+    ? selectedUser.online
+        ? "🟢 Online"
+        : "⚪ Offline"
+    : "Online"}
         </div>
       </div>
 
       {/* Chat Box */}
       <div className="chat-box">
-        {messages.map((msg, index) => {
-          const isMe = msg.username === username;
+        {messages
+        .filter((msg) => {
+    if (!selectedUser) return false;
+
+    return (
+      (msg.sender === username &&
+        msg.receiver === selectedUser.username) ||
+
+      (msg.sender === selectedUser.username &&
+        msg.receiver === username)
+    );
+  })
+        
+        .map((msg, index) => {
+          const isMe = msg.sender === username;
 
           return (
             <div
@@ -185,7 +223,7 @@ socket.on("user_list", (list) => {
             >
       <div className={`message ${isMe ? "my-message" : "other-message"}`}>
                 <div>
-                  <strong>{msg.username}</strong>
+                  <strong>{msg.sender}</strong>
 
                   <small style={{ marginLeft: "8px" }}>
                     {msg.time}

@@ -101,8 +101,8 @@
 .profile-card {
   background-color: #e5cdc0;
   border-radius: 15px;
-  padding: 5px;
-  margin: 5px 0;
+  padding: 1px;
+  margin: 2px 0;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -126,6 +126,7 @@
   align-items: center;
   font-size: 35px;
   margin: 0 auto 15px;
+  position:relative;
 }
 
 .profile-subtitle {
@@ -184,8 +185,8 @@
 }
 
 .avatar{
-    width:55px;
-    height:55px;
+    width:45px;
+    height:45px;
     border-radius:50%;
     background:#d6aed2;
 
@@ -197,6 +198,7 @@
     font-size:24px;
     font-weight:bold;
 
+    position: relative;
     flex-shrink:0;
 }
 
@@ -208,4 +210,14 @@
 .user-info{
     flex:1;
     min-width: 0;
+}
+.online-dot{
+    position: absolute;
+    width:12px;
+    height:12px;
+    background:#35d16f;
+    border:3px solid white;
+    border-radius:50%;
+    bottom:-2px;
+    right:-2px;
 }
